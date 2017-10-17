@@ -7,7 +7,6 @@ class Email_sender
 
 	def initialize
 		@gmail = Gmail.connect(ENV["EMAIL"], ENV["PASSWORD"])
-		binding.pry
 	end
 
 
@@ -29,9 +28,25 @@ class Email_sender
 		puts @gmail.inbox.count(:read)
 	end
 
+	def send_mail
+		@gmail.deliver do
+			to "kola.hov@gmail.com"
+			subject "Bonne ambiance dans les vestiaires"
+		  text_part do
+			body "J'ai trop la pêche! One, two, one, two!"
+	      end
+	      html_part do
+	    	content_type 'text/html; charset=UTF-8'
+	    	body "<p>J'ai trop la pêche! One, two, one, two!.</p></br><a href = 'https://www.youtube.com/watch?v=pKIrZw3pkNM'>Salut c'est cool</a>"
+	      end
+	    end
+	  # add_file "/path/to/some_image.jpg"
+	end
+
 	def perform
 		connect_to_gmail
-		email_count
+		send_mail
+		# email_count
 		@gmail.logout
 	end		
 end
